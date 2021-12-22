@@ -9,7 +9,7 @@ import (
 )
 
 func TestTruth(t *testing.T) {
-	if true != true {
+	if true == false {
 		t.Error("everything I know is wrong")
 	}
 }

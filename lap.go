@@ -100,7 +100,7 @@ func timeDuration(start string, end string) (int, error) {
 }
 
 func init() {
-	c.Version = flag.Bool("V", false, "prints version information")
+	c.Version = flag.Bool("v", false, "prints version information")
 	c.TailFile = flag.Bool("tail", false, "tail the log file to receive future events")
 	c.OutputFormat = flag.String("format", "json", "format to output log events.  possible values are 'json' or 'xml'.")
 	c.Output = os.Stdout //configurable to help with unit testing
