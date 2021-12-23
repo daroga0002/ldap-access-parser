@@ -1,0 +1,39 @@
+
+[05/Dec/2021:01:14:01 +0100] conn=3116303 op=-1 msgId=-1 - fd=723 slot=723 LDAPS connection from 10.21.6.110:8534 to 10.21.13.11
+[05/Dec/2021:01:14:01 +0100] conn=3116303 op=-1 msgId=-1 - SSL 168-bit 3DES-EDE-CBC  prot=TLS1.0
+[05/Dec/2021:01:14:01 +0100] conn=3116303 op=0 msgId=1 - BIND dn="cn=user1,ou=pseudo accounts,o=ptc" method=128 version=3
+[05/Dec/2021:01:14:01 +0100] conn=3116303 op=0 msgId=1 - RESULT err=0 tag=97 nentries=0 etime=0 dn="cn=user1,ou=pseudo accounts,o=ptc"
+[05/Dec/2021:01:14:01 +0100] conn=3116303 op=1 msgId=2 - SRCH base="ou=people,o=ptc" scope=2 filter="(&(|(objectClass=GenericPosixAccount)(&(objectClass=MyUser)(MyAllowedHosts=oracloud-235)))(uid=s2ss))" attrs="cn uid uidNumber gidNumber gecos description homeDirectory loginShell"
+[05/Dec/2021:01:14:01 +0100] conn=1852 op=198634 msgId=198635 - SRCH base="ou=people,o=ptc" scope=2 filter="(&(|(objectClass=GenericPosixAccount)(&(objectClass=MyUser)(MyAllowedHosts=kasjer-ap-nit-02)))(uid=ldapwatchdoguser))" attrs="cn uid uidNumber gidNumber gecos description homeDirectory loginShell"
+[05/Dec/2021:01:14:01 +0100] conn=3116303 op=1 msgId=2 - RESULT err=0 tag=101 nentries=1 etime=0
+[05/Dec/2021:01:14:01 +0100] conn=3116303 op=2 msgId=3 - UNBIND
+[05/Dec/2021:01:14:01 +0100] conn=3116303 op=2 msgId=-1 - closing from 10.21.6.110:8534 - U1 - Connection closed by unbind client -
+[05/Dec/2021:01:14:01 +0100] conn=3116303 op=-1 msgId=-1 - closed.
+
+
+
+
+{"time":"05/Dec/2021:01:14:01 +0100","client":"10.21.6.110:8534","server":"10.21.13.11","connection":3116303,"ssl":false,"sslcipher":"3DES-EDE-CBC  prot=TLS1.0","sslstrength":"168","operation":1,"action":"msgId","requests":["msgId=2 - SRCH base=\"ou=people,o=ptc\" scope=2 filter=\"(\u0026(|(objectClass=GenericPosixAccount)(\u0026(objectClass=MyUser)(MyAllowedHosts=oracloud-235)))(uid=s2ss))\" attrs=\"cn uid uidNumber gidNumber gecos description homeDirectory loginShell\""],"responses":["msgId=2 - RESULT err=0 tag=101 nentries=1 etime=0"]}
+
+
+
+
+
+[05/Dec/2021:01:14:01 +0100] conn=3116303 op=-1 msgId=-1 - fd=723 slot=723 LDAPS connection from 10.21.6.110:8534 to 10.21.13.11
+[05/Dec/2021:01:14:01 +0100] conn=3116303 op=-1 msgId=-1 - SSL 168-bit 3DES-EDE-CBC  prot=TLS1.0
+[05/Dec/2021:01:14:01 +0100] conn=3116303 op=0 msgId=1 - BIND dn="cn=user1,ou=pseudo accounts,o=ptc" method=128 version=3
+[05/Dec/2021:01:14:01 +0100] conn=3116303 op=0 msgId=1 - RESULT err=0 tag=97 nentries=0 etime=0 dn="cn=user1,ou=pseudo accounts,o=ptc"
+[05/Dec/2021:01:14:01 +0100] conn=3116303 op=1 msgId=2 - SRCH base="ou=people,o=ptc" scope=2 filter="(&(|(objectClass=GenericPosixAccount)(&(objectClass=MyUser)(MyAllowedHosts=oracloud-235)))(uid=s2ss))" attrs="cn uid uidNumber gidNumber gecos description homeDirectory loginShell"
+[05/Dec/2021:01:14:01 +0100] conn=1852 op=198634 msgId=198635 - SRCH base="ou=people,o=ptc" scope=2 filter="(&(|(objectClass=GenericPosixAccount)(&(objectClass=MyUser)(MyAllowedHosts=kasjer-ap-nit-02)))(uid=ldapwatchdoguser))" attrs="cn uid uidNumber gidNumber gecos description homeDirectory loginShell"
+[05/Dec/2021:01:14:01 +0100] conn=3116303 op=1 msgId=2 - RESULT err=0 tag=101 nentries=1 etime=0
+[05/Dec/2021:01:14:01 +0100] conn=3116303 op=2 msgId=3 - UNBIND
+[05/Dec/2021:01:14:01 +0100] conn=3116303 op=2 msgId=-1 - closing from 10.21.6.110:8534 - U1 - Connection closed by unbind client -
+[05/Dec/2021:01:14:01 +0100] conn=3116303 op=-1 msgId=-1 - closed.
+
+
+var lineMatch = `^\[(?P<time>.*)\] conn=(?P<conn_num>\d+) (?P<event>.*)`
+var connectionMatch = `(?P<ssl>SSL)? connection from (?P<client_ip>.*) to (?P<server_ip>.*)`
+var operationMatch = `op=(?P<opnum>\-?\d+) (?P<operation>\w+)(?P<details>.+)?`
+var bindDNMatch = `dn=\"(?P<dn>.+)\"`
+var connectionClosedMatch = ` closed `
+var sslCipherMatch = `SSL (?P<strength>.*)-bit (?P<cipher>.*)`

@@ -30,22 +30,6 @@ func TestEventPrintJSON(t *testing.T) {
 	}
 }
 
-func TestDuration(t *testing.T) {
-	data := []struct{ start, stop string }{
-		{"21/Apr/2009:11:39:55 -0700", "21/Apr/2010:11:39:55 -0700"},
-		{"21/Apr/2010:11:39:55 -0700", "21/Apr/209:11:39:55 -0700"}}
-	durations := []int{31536000, -1}
-
-	for n, input := range data {
-		res, _ := timeDuration(input.start, input.stop)
-
-		if res != durations[n] {
-			t.Errorf("TestDuration %d failed: %d didn't match %d\n", n+1, res, durations[n])
-		}
-	}
-
-}
-
 func TestParseFileXML(t *testing.T) {
 	compileRegexes()
 	var b bytes.Buffer
