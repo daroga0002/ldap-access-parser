@@ -19,8 +19,8 @@ const (
 	version    = "v1.0"
 )
 
-//Event (request(s) paired with response) to be output in either
-//JSON or XML depending on user preference.
+// Event (request(s) paired with response) to be output in either
+// JSON or XML depending on user preference.
 type Event struct {
 	OppTime         string   `json:"time" xml:"DateTime"`
 	Client          string   `json:"client" xml:"Client"`
@@ -46,23 +46,28 @@ type config struct {
 	Output       io.Writer
 }
 
-//holds config
+// holds config
 var c config
 
-//regexes to extract relevant fields from log lines
+// regexes to extract relevant fields from log lines
 var lineMatch = `^\[(?P<time>.*)\] conn=(?P<conn_num>\d+) (?P<event>.*)`
-var connectionMatch = `(?P<ssl>SSL)? connection from (?P<client_ip>.*) to (?P<server_ip>.*)`
-var operationMatch = `op=(?P<opnum>\-?\d+) (?P<operation>\w+)(?P<details>.+)?`
-var bindDNMatch = `dn=\"(?P<dn>.+)\"`
-var connectionClosedMatch = ` closed `
-var sslCipherMatch = `SSL (?P<strength>.*)-bit (?P<cipher>.*)`
 
-var lineRe *regexp.Regexp
-var connectionOpenRe *regexp.Regexp
-var operationRe *regexp.Regexp
-var bindDNRe *regexp.Regexp
-var connectionClosedRe *regexp.Regexp
-var sslCipherRe *regexp.Regexp
+var (
+	connectionMatch       = `(?P<ssl>SSL)? connection from (?P<client_ip>.*) to (?P<server_ip>.*)`
+	operationMatch        = `op=(?P<opnum>\-?\d+) (?P<operation>\w+)(?P<details>.+)?`
+	bindDNMatch           = `dn=\"(?P<dn>.+)\"`
+	connectionClosedMatch = ` closed `
+	sslCipherMatch        = `SSL (?P<strength>.*)-bit (?P<cipher>.*)`
+)
+
+var (
+	lineRe             *regexp.Regexp
+	connectionOpenRe   *regexp.Regexp
+	operationRe        *regexp.Regexp
+	bindDNRe           *regexp.Regexp
+	connectionClosedRe *regexp.Regexp
+	sslCipherRe        *regexp.Regexp
+)
 
 func check(e error) {
 	if e != nil {
@@ -103,7 +108,7 @@ func init() {
 	c.Version = flag.Bool("v", false, "prints version information")
 	c.TailFile = flag.Bool("tail", false, "tail the log file to receive future events")
 	c.OutputFormat = flag.String("format", "json", "format to output log events.  possible values are 'json' or 'xml'.")
-	c.Output = os.Stdout //configurable to help with unit testing
+	c.Output = os.Stdout // configurable to help with unit testing
 
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
@@ -133,11 +138,11 @@ func (c config) parseFile(ac map[int]Event, f string) map[int]Event {
 		tc.ReOpen = true
 	}
 
-	//open file for parsing
+	// open file for parsing
 	t, err := tail.TailFile(f, tc)
 	check(err)
 
-	//loop through file contents
+	// loop through file contents
 	for line := range t.Lines {
 		var lineMap map[string]string
 		var ok bool
@@ -151,7 +156,7 @@ func (c config) parseFile(ac map[int]Event, f string) map[int]Event {
 		}
 
 		if connectionMap, ok := matchLine(connectionOpenRe, lineMap["event"]); ok {
-			//new connection made
+			// new connection made
 			ssl := false
 			if connectionMap["ssl"] == "SSL" {
 				ssl = true
@@ -161,7 +166,7 @@ func (c config) parseFile(ac map[int]Event, f string) map[int]Event {
 				Client:     connectionMap["client_ip"],
 				Server:     connectionMap["server_ip"],
 				Connection: connum,
-				Operation:  -2, //number that shouldn't exist in logs
+				Operation:  -2, // number that shouldn't exist in logs
 				ConnTime:   lineMap["time"],
 				SSL:        ssl,
 			}
@@ -170,7 +175,7 @@ func (c config) parseFile(ac map[int]Event, f string) map[int]Event {
 		}
 
 		if _, exists := ac[connum]; !exists {
-			//skip operation if no connection exists
+			// skip operation if no connection exists
 			// this is caused by connections that were created before we started
 			// parsing the log file.
 			continue
@@ -185,7 +190,7 @@ func (c config) parseFile(ac map[int]Event, f string) map[int]Event {
 		}
 
 		if operationMap, ok := matchLine(operationRe, lineMap["event"]); ok {
-			//new operation
+			// new operation
 			opnum, err := strconv.Atoi(operationMap["opnum"])
 			if err != nil {
 				fmt.Printf("failed to parse '%s' into int\n", operationMap["opnum"])
@@ -240,7 +245,7 @@ func compileRegexes() {
 }
 
 func main() {
-	//prepare regex's
+	// prepare regex's
 	compileRegexes()
 	activeConnections := map[int]Event{}
 
@@ -257,5 +262,4 @@ func main() {
 	}
 
 	c.parseFile(activeConnections, flag.Args()[0])
-
 }
