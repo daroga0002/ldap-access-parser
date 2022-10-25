@@ -33,7 +33,8 @@ func TestEventPrintJSON(t *testing.T) {
 func TestDuration(t *testing.T) {
 	data := []struct{ start, stop string }{
 		{"21/Apr/2009:11:39:55 -0700", "21/Apr/2010:11:39:55 -0700"},
-		{"21/Apr/2010:11:39:55 -0700", "21/Apr/209:11:39:55 -0700"}}
+		{"21/Apr/2010:11:39:55 -0700", "21/Apr/209:11:39:55 -0700"},
+	}
 	durations := []int{31536000, -1}
 
 	for n, input := range data {
@@ -43,7 +44,6 @@ func TestDuration(t *testing.T) {
 			t.Errorf("TestDuration %d failed: %d didn't match %d\n", n+1, res, durations[n])
 		}
 	}
-
 }
 
 func TestParseFileXML(t *testing.T) {
@@ -52,9 +52,11 @@ func TestParseFileXML(t *testing.T) {
 	format := "xml"
 	tail := false
 
-	c := config{Output: &b,
+	c := config{
+		Output:       &b,
 		OutputFormat: &format,
-		TailFile:     &tail}
+		TailFile:     &tail,
+	}
 
 	testInput := []string{"test_data/input_1.txt", "test_data/input_2.txt", "test_data/input_3.txt", "test_data/input_4.txt", "test_data/input_5.txt"}
 	testOutput := []string{"test_data/output_1_xml.txt", "test_data/output_2_xml.txt", "test_data/output_3_xml.txt", "test_data/output_4_xml.txt", "test_data/output_5_xml.txt"}
