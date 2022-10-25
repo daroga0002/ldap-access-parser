@@ -1,0 +1,16 @@
+version = 1
+
+[[analyzers]]
+name = "go"
+enabled = true
+
+  [analyzers.meta]
+  import_root = "github.com/daroga0002/ldap-access-parser"
+
+[[transformers]]
+name = "gofmt"
+enabled = true
+
+[[transformers]]
+name = "gofumpt"
+enabled = true
